@@ -10,7 +10,7 @@ export const loggerHttpPlugin = new Elysia({ prefix: "/logger" })
     jwt({
       name: "jwt",
       secret: process.env.JWT_SECRET_KEY ?? "",
-    })
+    }),
   )
   // GET /role/logger/logs/:folder/:service/:file
   .get(
@@ -34,7 +34,13 @@ export const loggerHttpPlugin = new Elysia({ prefix: "/logger" })
       }
 
       const { folder, service, file } = params;
-      const logPath = path.join(LOGS_BASE, folder, service, `${file}.log`);
+      const logPath = path.resolve(LOGS_BASE, folder, service, `${file}.log`);
+
+      // Prevent path traversal: ensure logPath stays inside LOGS_BASE
+      if (!logPath.startsWith(LOGS_BASE + path.sep)) {
+        set.status = 403;
+        return { error: "Forbidden" };
+      }
 
       if (!fs.existsSync(logPath)) {
         set.status = 404;
@@ -53,5 +59,5 @@ export const loggerHttpPlugin = new Elysia({ prefix: "/logger" })
         set.status = 500;
         return { error: "Failed to read log file" };
       }
-    }
+    },
   );

@@ -11,6 +11,7 @@ export const AuthenticationController = async ({
   set,
 }: Context & { body: AuthenticationProps }) => {
   const action = "AUTHENTICATION_DASHBOARD";
+  const startTime = Date.now();
 
   try {
     const { code } = body;
@@ -20,7 +21,7 @@ export const AuthenticationController = async ({
       set.status = 400;
       return {
         success: false,
-        messsage: "Code is required",
+        message: "Code is required",
       };
     }
 
@@ -33,8 +34,9 @@ export const AuthenticationController = async ({
     if (!clientId || !clientSecret || !redirectUri || !tokenUrl || !scope) {
       set.status = 400;
       authenLogger.error(
-        `[${action}]  Missing required environment variable(s) for authentication`
+        `[${action}]  Missing required environment variable(s) for authentication`,
       );
+      return { success: false, message: "Server configuration error" };
     }
 
     const options = {
@@ -55,6 +57,8 @@ export const AuthenticationController = async ({
     const accessToken = response.data.access_token;
     if (!accessToken) {
       authenLogger.error(`[${action}]  No access token found in the response.`);
+      set.status = 502;
+      return { success: false, message: "No access token received" };
     }
 
     authenLogger.info(`[${action}]  Authentication successful.`);
@@ -77,7 +81,7 @@ export const AuthenticationController = async ({
   } finally {
     console.debug("process completed", {
       action,
-      durationMs: Date.now() - new Date().getTime(),
+      durationMs: Date.now() - startTime,
     });
   }
 };
@@ -87,6 +91,7 @@ export const Authentication360Controller = async ({
   set,
 }: Context & { body: AuthenticationProps }) => {
   const action = "AUTHENTICATION_360";
+  const startTime = Date.now();
 
   try {
     const { code } = body;
@@ -96,7 +101,7 @@ export const Authentication360Controller = async ({
       set.status = 400;
       return {
         success: false,
-        messsage: "Code is required",
+        message: "Code is required",
       };
     }
 
@@ -109,8 +114,9 @@ export const Authentication360Controller = async ({
     if (!clientId || !clientSecret || !redirectUri || !tokenUrl || !scope) {
       set.status = 400;
       authenLogger.error(
-        `[${action}]  Missing required environment variable(s) for authentication`
+        `[${action}]  Missing required environment variable(s) for authentication`,
       );
+      return { success: false, message: "Server configuration error" };
     }
 
     const options = {
@@ -131,6 +137,8 @@ export const Authentication360Controller = async ({
     const accessToken = response.data.access_token;
     if (!accessToken) {
       authenLogger.error(`[${action}]  No access token found in the response.`);
+      set.status = 502;
+      return { success: false, message: "No access token received" };
     }
 
     authenLogger.info(`[${action}]  Authentication successful.`);
@@ -153,7 +161,7 @@ export const Authentication360Controller = async ({
   } finally {
     console.debug("process completed", {
       action,
-      durationMs: Date.now() - new Date().getTime(),
+      durationMs: Date.now() - startTime,
     });
   }
 };
@@ -173,7 +181,7 @@ export const fetchCMUPersonalInfo = async () => {
     // ⚠️ ตรวจสอบ scope สำหรับ client_credentials flow
     if (!scope.endsWith("/.default")) {
       console.warn(
-        `[WARNING] Scope should end with '/.default'. Current: ${scope}`
+        `[WARNING] Scope should end with '/.default'. Current: ${scope}`,
       );
       // ถ้าต้องการแก้ไขอัตโนมัติ:
       // scope = scope.endsWith('/') ? `${scope}.default` : `${scope}/.default`;
@@ -193,7 +201,7 @@ export const fetchCMUPersonalInfo = async () => {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         timeout: 10000,
-      }
+      },
     );
 
     const accessToken = tokenResponse.data.access_token;

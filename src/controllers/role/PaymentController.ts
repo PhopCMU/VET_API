@@ -19,43 +19,28 @@ export const PaymentController = async ({
       payment_method: "QR",
     };
 
+    // TODO: Replace stub with real Payment Gateway integration
+    // const scbResponse = await axios.post(
+    //   "https://payment-gateway.onrender.com",
+    //   paymentData,
+    //   {
+    //     headers: {
+    //       Authorization: "Bearer " + process.env.PAYMENT_TOKEN,
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+    // const qrCode = scbResponse.data.qrCode || scbResponse.data.paymentUrl;
+    // if (!qrCode) {
+    //   set.status = 500;
+    //   return { success: false, message: "เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Payment Gateway" };
+    // }
     set.status = 200;
     return {
       success: true,
       message: "success",
       qr_data: "https://payment-gateway.onrender.com",
       transaction_id: "TWS55668",
-      data: paymentData,
-    };
-
-    // ส่งข้อมูลไปยัง Payment Gateway
-    const scbResponse = await axios.post(
-      "https://payment-gateway.onrender.com",
-      paymentData,
-      {
-        headers: {
-          Authorization: "Bearer " + process.env.PAYMENT_TOKEN,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    // Payment Gateway ได้รับข้อมูลแล้ว ส่ง รหัส Gen QR Code กลับไปยัง Client
-    const qrCode = scbResponse.data.qrCode || scbResponse.data.paymentUrl;
-
-    if (!qrCode) {
-      set.status = 500;
-      return {
-        success: false,
-        message: "เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Payment Gateway",
-      };
-    }
-    set.status = 200;
-    return {
-      success: true,
-      message: "success",
-      qr_data: qrCode,
-      transaction_id: scbResponse.data.transaction_id, // เก็บ transaction_id ใน database
       data: paymentData,
     };
   } catch (e: any) {

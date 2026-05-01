@@ -49,7 +49,7 @@ export const authWithRateLimit = async (
   // --- Auth Header ---
   const authToken = request.headers.get("Authorization") ?? "";
   if (!authToken) {
-    Logger.error(`${action} | IP=${remoteAddr} | HEADERS_NOT_FOUND`);
+    Logger.error(`${action} | IP=${clientIp} | HEADERS_NOT_FOUND`);
     set.status = 401;
     return {
       success: false,
@@ -61,7 +61,7 @@ export const authWithRateLimit = async (
   // --- JWT Authentication ---
   const authention = await CheckJWTAuthention(authToken, jwt, set);
   if (!authention) {
-    Logger.warn(`${action} | IP=${remoteAddr} | AUTH_FAILED`);
+    Logger.warn(`${action} | IP=${clientIp} | AUTH_FAILED`);
     set.status = 401;
     return {
       success: false,
