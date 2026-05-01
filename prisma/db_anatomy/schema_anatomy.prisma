@@ -1,0 +1,52 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../../generated/anatomy"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL_ANATOMY")
+}
+
+model Student {
+    studentId      String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    prefix         String // คำนำหน้า
+    fname          String // ชื่อ
+    levelup        String // ระดับการศึกษา
+    school         String // โรงเรียน
+    address        String // ที่อยู่
+    hdb            String // ข้อมูลที่อยู่อื่นๆ
+    age            String // อายุ
+    cardId         String        @unique // เลขบัตรประชาชน
+    phone          String // เบอร์โทรศัพท์
+    email          String // อีเมล
+    uploadImage    String // รูปภาพที่อัพโหลด
+    uploadPDPA     String // เอกสาร PDPA ที่อัพโหลด
+    uploadSlip     String // สลิปการโอนที่อัพโหลด
+    payments       Boolean       @default(false) // สถานะการการเงิน
+    paperPDPA      Boolean       @default(false) // สถานะการเอกสาร PDPA
+    accepted       Boolean       @default(true) // สถานะการรับเข้าเรียน
+    examSeatNumber String?
+    createdAt      DateTime      @default(now()) // วันที่สร้าง
+    updatedAt      DateTime      @updatedAt // วันที่อัปเดต
+    scores         Score[] // ความสัมพันธ์หนึ่ง-ต่อ-หลายกับ Score (คะแนน)
+    certificates   Certificate[] // ความสัมพันธ์หนึ่ง-ต่อ-หลายกับ Certificate (ใบรับรอง)
+}
+
+model Score {
+    scoreId   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    term      String // หมายเลขไตรมาส (1, 2 หรือ 3)
+    subject   String // ชื่อวิชา
+    score     String // คะแนนที่ได้
+    student   Student  @relation(fields: [studentId], references: [studentId])
+    studentId String   @db.Uuid
+    createdAt DateTime @default(now()) // วันที่สร้าง
+}
+
+model Certificate {
+    certificateId String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    downloadUrl   String // URL สำหรับดาวน์โหลดใบรับรอง
+    student       Student  @relation(fields: [studentId], references: [studentId])
+    studentId     String   @db.Uuid
+    createdAt     DateTime @default(now()) // วันที่สร้าง
+}

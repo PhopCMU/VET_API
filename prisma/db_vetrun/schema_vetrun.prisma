@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/vetrun"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_VETRUN")
+}
+
+model Option {
+  optionId  String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  limit     Int       @default(0)
+}
+
+model Size_shirt {
+  shirtId     String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  size        String
+  s_width     Int
+  s_high      Int
+  createdAt   DateTime      @default(now())
+  point       Int?
+  updatedAt   DateTime?     @updatedAt
+  participant Participant[]
+  Items_vip   Items_vip[]
+  OrderItem   OrderItem[]
+}
+
+model bib_sequence {
+  id            String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  prefix        String @unique
+  current_value Int    @default(1)
+  max_value     Int    @default(999)
+}
+
+model Participant {
+  participantId String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nameBib       String?
+  numberBib     String?
+  payment       Boolean     @default(false)
+  firstName     String
+  lastName      String
+  email         String
+  phone         String
+  sex           String
+  age           String?
+  sizeId        String      @db.Uuid
+  transferFile  String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
+  year          String?
+  address       String?
+  typeBib       String?
+  Animal        Animal[]
+  size_sh       Size_shirt  @relation(fields: [sizeId], references: [shirtId])
+  Items_vip     Items_vip[]
+  CheckPoint    CheckPoint?
+
+  @@unique([firstName, lastName])
+}
+
+model Animal {
+  animalId      String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  weight        String
+  sex           String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
+  participantId String      @db.Uuid
+  fancys        Boolean     @default(false)
+  breed         String
+  participant   Participant @relation(fields: [participantId], references: [participantId])
+}
+
+model Sponsor {
+  sponsorId String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  image     String?
+  link      String?
+  price     String?
+  type      Types     @default(Bronze)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+enum Types {
+  Diamond
+  Platinum
+  Titanium
+  Gold
+  Silver
+  Bronze
+}
+
+model Items_vip {
+  itemId        String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  participantId String      @db.Uuid
+  participant   Participant @relation(fields: [participantId], references: [participantId])
+  sizeId        String?     @db.Uuid
+  size_sh       Size_shirt? @relation(fields: [sizeId], references: [shirtId])
+  items         String // shirt_2 | trophy
+  model_shirt   String? // 4KM | 11KM
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
+}
+
+/**
+ * Model Sale Shirt
+ */
+
+model ShirtModel {
+  shirtmodelId String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String // 4K | 11K
+  price        Float?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime?
+  OrderItem    OrderItem[]
+}
+
+model UserSaleShirt {
+  userId               String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullname             String
+  phone                String
+  email                String
+  sh_collection_method String      @default("pickup")
+  delivery_address     String?
+  total_amount         Float
+  payment              Boolean     @default(false)
+  transferFile         String
+  ems_tracking         String?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime?
+  OrderItem            OrderItem[]
+}
+
+model OrderItem {
+  orderId         String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userSaleshirtId String        @db.Uuid
+  userSaleshirt   UserSaleShirt @relation(fields: [userSaleshirtId], references: [userId])
+  shirtmodelId    String        @db.Uuid
+  shirtmodel      ShirtModel    @relation(fields: [shirtmodelId], references: [shirtmodelId])
+  sizeId          String        @db.Uuid
+  size            Size_shirt    @relation(fields: [sizeId], references: [shirtId])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime?
+
+  @@index([userSaleshirtId])
+}
+
+model CheckPoint {
+  checkPointId  String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  checkPoint    Boolean     @default(false) // มา True , ไม่มา false
+  participantId String      @unique @db.Uuid
+  participant   Participant @relation(fields: [participantId], references: [participantId])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?
+}

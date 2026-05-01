@@ -1,0 +1,292 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../../generated/role" // สร้าง client ในโฟลเดอร์แยก
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL_ROLE") // URL ฐานข้อมูลจาก environment variable
+}
+
+/**
+ * โมเดลสำหรับผู้ใช้ (User)
+ */
+model User {
+    userId               String                 @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    cmuitaccount         String                 @unique
+    cmuitaccount_name    String
+    firstname_EN         String
+    firstname_TH         String
+    itaccounttype_EN     String
+    itaccounttype_TH     String
+    itaccounttype_id     String
+    lastname_EN          String
+    lastname_TH          String
+    organization_code    String
+    organization_name_EN String
+    organization_name_TH String
+    organization_vet     String?
+    organization_vet_id  String?
+    prename_EN           String
+    prename_TH           String
+    prename_id           String
+    student_id           String?
+    status_user          String                 @default("active")
+    image                String?
+    jobpositionId        String?                @db.Uuid // ปรับเพิ่ม @db.Uuid
+    jobposition          JobPosition?           @relation(fields: [jobpositionId], references: [jobpositionId], onDelete: Cascade)
+    createAt             DateTime
+    updateAt             DateTime
+    DepartmentMembership DepartmentMembership[]
+    UserPermission       UserPermission[]
+}
+
+/**
+ * โมเดลสำหรับตำแหน่งทางวิชาการ
+ */
+
+model JobPosition {
+    jobpositionId String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    name          String
+    passposition  String
+    createAt      DateTime
+    updateAt      DateTime
+    User          User[]
+}
+
+/**
+ * Department: หน่วยงาน
+ */
+model MainDepartment {
+    mainDepartmentId String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    name_EN          String?
+    name_TH          String
+
+    // หน่วยงานย่อยทั้งหมดภายใต้หน่วยงานนี้
+    subDepartments SubDepartment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+
+    @@unique([name_TH])
+}
+
+/**
+ * หน่วยงานย่อย (SubDepartment)
+ */
+
+model SubDepartment {
+    subDepartmentId  String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    name_EN          String?
+    name_TH          String
+    mainDepartmentId String         @db.Uuid
+    mainDepartment   MainDepartment @relation(fields: [mainDepartmentId], references: [mainDepartmentId])
+
+    // สมาชิกในหน่วยงานย่อยนี้
+    members DepartmentMembership[]
+
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @default(now())
+    PermissionDepartment PermissionDepartment[]
+
+    @@unique([name_TH])
+}
+
+/**
+ * ความสัมพันธ์: ผู้ใช้เป็นสมาชิกของแผนก
+ */
+model DepartmentMembership {
+    departmentMembershipId String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    userId                 String @db.Uuid
+    subDepartmentId        String @db.Uuid
+
+    user          User          @relation(fields: [userId], references: [userId])
+    subDepartment SubDepartment @relation(fields: [subDepartmentId], references: [subDepartmentId])
+
+    assignedAt DateTime @default(now())
+
+    @@unique([userId, subDepartmentId])
+}
+
+/**
+ * โมเดลสำหรับโปรเจกต์ (Project)
+ */
+model Project {
+    projectId      String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // รหัสโปรเจกต์ (UUID)
+    name           String // ชื่อโปรเจกต์
+    description    String? // คำอธิบาย (ไม่บังคับ)
+    database       String // ชื่อฐานข้อมูล
+    part           String? // เส้นทาง (ไม่บังคับ)
+    position       Int? // ลำดับการแสดงผล (ไม่บังคับ)
+    status         Boolean          @default(true) // สถานะ
+    createdAt      DateTime         @default(now()) // วันที่สร้าง
+    updatedAt      DateTime         @default(now()) // วันที่อัปเดต
+    UserPermission UserPermission[]
+}
+
+/**
+ * โมเดลสำหรับเมนูหลัก (Menu)
+ */
+model Menu {
+    menuId    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // รหัสเมนูหลัก (UUID)
+    name      String // ชื่อเมนู เช่น "ฐานข้อมูลองค์กร", "Application"
+    icon      String // ไอคอนของเมนู
+    part      String? // เส้นทาง (ถ้ามี)
+    position  Int? // ลำดับการแสดงผล (ไม่บังคับ)
+    subMenus  SubMenu[] // ความสัมพันธ์กับเมนูย่อย
+    createdAt DateTime  @default(now()) // วันที่สร้าง
+    updatedAt DateTime  @default(now()) // วันที่อัปเดต
+}
+
+/**
+ * โมเดลสำหรับเมนูย่อย (SubMenu)
+ */
+model SubMenu {
+    submenuId String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    name      String
+    icon      String
+    part      String?
+    position  Int?    @default(9999)
+    menuId    String  @db.Uuid
+    menu      Menu    @relation(fields: [menuId], references: [menuId])
+
+    isProjectBased Boolean @default(false) // true = ต้องระบุ project, false = ไม่ต้อง
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+
+    permissions UserPermission[]
+}
+
+/**
+ * โมเดลหลัก: สิทธิ์ของผู้ใช้ต่อ Submenu
+ */
+model UserPermission {
+    userPermissionId String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    userId           String  @db.Uuid
+    submenuId        String  @db.Uuid
+    projectId        String? @db.Uuid // ⚠️ nullable
+
+    user    User     @relation(fields: [userId], references: [userId])
+    submenu SubMenu  @relation(fields: [submenuId], references: [submenuId])
+    project Project? @relation(fields: [projectId], references: [projectId])
+
+    view        Boolean     @default(false)
+    create      Boolean     @default(false)
+    edit        Boolean     @default(false)
+    delete      Boolean     @default(false)
+    accessScope AccessScope @default(RESTRICTED)
+
+    departments PermissionDepartment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+
+    @@unique([userId, submenuId, projectId]) // ห้ามซ้ำ
+}
+
+/**
+ * สำหรับระบุว่าสิทธิ์นี้ใ UserId นี้เป็น Super Admin หรือไม่
+ */
+
+model UserSuperAdmin {
+    userSuperAdminId String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    userId           String   @db.Uuid
+    createdAt        DateTime @default(now())
+    updatedAt        DateTime @default(now())
+
+    @@unique([userId]) // ห้ามซ้ำ
+}
+
+/**
+ * สำหรับระบุว่าสิทธิ์นี้ใช้กับแผนกใดบ้าง (ถ้า accessScope = BY_DEPARTMENT)
+ */
+model PermissionDepartment {
+    permissionDepartmentId String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    userPermissionId       String @db.Uuid
+    subDepartmentId        String @db.Uuid
+
+    userPermission UserPermission @relation(fields: [userPermissionId], references: [userPermissionId])
+    subDepartment  SubDepartment  @relation(fields: [subDepartmentId], references: [subDepartmentId])
+
+    @@unique([userPermissionId, subDepartmentId])
+}
+
+/**
+ * Enum: ระดับการเข้าถึงข้อมูล
+ */
+enum AccessScope {
+    ALL
+    BY_DEPARTMENT
+    BY_RESPONSIBILITY
+    RESTRICTED
+}
+
+/**
+ * DATA SCB
+ */
+
+model ScbPayments {
+    scbId                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    accountId              String?               @default("") // กรณีที่มีการชำระเงินผ่าน UserId โดยตรง
+    reverseFlag            String? // ถ้ายกเลิกแล้วคืนเงินสำเร็จจะ ขึ้น R
+    payeeProxyId           String // BILLER ID
+    payeeProxyType         String
+    payeeAccountNumber     String
+    payerAccountNumber     String
+    payerName              String
+    sendingBankCode        String
+    receivingBankCode      String                @default("014")
+    amount                 String
+    transactionId          String                @unique
+    transactionDateandTime String
+    billPaymentRef1        String
+    billPaymentRef2        String
+    billPaymentRef3        String?
+    currencyCode           String
+    channelCode            String?
+    transactionType        String
+    partnerTransactionId   String?
+    createdAt              DateTime              @default(now())
+    ScbSlipVerification    ScbSlipVerification[]
+    ScbVoid                ScbVoid[]
+
+    @@index([billPaymentRef2])
+}
+
+model ScbSlipVerification {
+    scbVerificationId String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    scbId             String      @db.Uuid
+    scbPayments       ScbPayments @relation(fields: [scbId], references: [scbId])
+    transTime         String
+    transRef          String
+    displayName       String
+    bankType          String
+    bankName          String
+    transDate         String
+    createdAt         DateTime    @default(now())
+}
+
+model ScbVoid {
+    scbVoidId   String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    scbId       String      @db.Uuid
+    scbPayments ScbPayments @relation(fields: [scbId], references: [scbId])
+
+    // --- Transaction Status ---
+    responseStatus          String
+    responseCode            String
+    responseCodeDescription String
+    extStatusDesc           String
+    createdAt               DateTime @default(now())
+}
+
+/**
+ * Block Visitor ID
+ */
+
+model VisitorBlock {
+    blockId   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    visitorId String   @unique
+    blockedAt DateTime @default(now())
+    unblockAt DateTime
+}

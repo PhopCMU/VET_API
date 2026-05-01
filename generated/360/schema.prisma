@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/360"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_360")
+}
+
+model User {
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now())
+  accountId        String         @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accounttype_en   String?
+  accounttype_th   String
+  cmuaccount       String
+  fullname_en      String?
+  fullname_th      String
+  level1agency_en  String?
+  level1agency_th  String
+  level2agency_en  String?
+  level2agency_th  String
+  level3agency_en  String?
+  level3agency_th  String?
+  positiontitle_en String?
+  positiontitle_th String
+  ratenumber       String?
+  workingstatus    Boolean        @default(true)
+  imageprofile     String?
+  nickname         String?
+  evaluations      Evaluation[]
+  evaluation_B     Evaluation_B[]
+}
+
+model Evaluation {
+  evaluationId String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  topic1       Int?
+  topic2       Int?
+  topic3       Int?
+  topic4       Int?
+  topic5       Int?
+  topic6       Int?
+  topic7       Int?
+  topic8       Int?
+  topic9       Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  accountId    String   @db.Uuid
+  comment      String?
+  fullname_th  String?
+  assessor     String?
+  user         User     @relation(fields: [accountId], references: [accountId])
+}
+
+model Evaluation_B {
+  evaluationId String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  topic1       Int?
+  topic2       Int?
+  topic3       Int?
+  topic4       Int?
+  topic5       Int?
+  topic6       Int?
+  topic7       Int?
+  topic8       Int?
+  topic9       Int?
+  topic10      Int?
+  topic11      Int?
+  topic12      Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  accountId    String   @db.Uuid
+  comment      String?
+  fullname_th  String?
+  assessor     String?
+  user         User     @relation(fields: [accountId], references: [accountId])
+}

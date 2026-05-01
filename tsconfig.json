@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ESNext",                                 // Bun supports all modern JS — keep ESNext
+    "lib": ["ESNext"],                                  // Match target
+    "module": "ESNext",                                // ESM — source uses import/export; Bun is ESM-native
+    "moduleResolution": "Bundler",                     // Bun acts as a bundler; replaces deprecated node10 alias
+    "types": ["bun-types"],                            // bun-types covers both Bun and Node-compat globals
+
+    /* Emit */
+    "outDir": "./dist",                                // กำหนด output directory
+    "rootDir": ".",                                // กำหนด source directory
+    "sourceMap": true,                                 // เปิด source maps เพื่อ debugging
+    "removeComments": true,                            // ลบ comments เพื่อลดขนาดไฟล์
+    "noEmitOnError": true,                             // ไม่ emit ถ้ามี error
+
+    /* Interop Constraints */
+    "esModuleInterop": true,                           // รักษาความเข้ากันได้กับ CommonJS
+    "forceConsistentCasingInFileNames": true,          // รักษาความสม่ำเสมอของ casing
+    "isolatedModules": true,                           // เพิ่มเพื่อความปลอดภัยในการ transpile
+
+    /* Type Checking */
+    "strict": true,                                    // รักษาการตรวจสอบ type อย่างเข้มงวด
+    "noImplicitAny": true,                            // ห้าม implicit any
+    "strictNullChecks": true,                         // ตรวจสอบ null/undefined
+    "noUnusedLocals": true,                           // ห้ามมีตัวแปร local ที่ไม่ได้ใช้
+    "noUnusedParameters": true,                       // ห้ามมี parameters ที่ไม่ได้ใช้
+    "noImplicitReturns": false,                        // ต้อง return ทุก code path
+    "noFallthroughCasesInSwitch": true,               // ป้องกัน switch case fallthrough
+
+    /* Completeness */
+    "skipLibCheck": true,                             // รักษาการ skip type checking ของ .d.ts
+    "declaration": false,                             // ปิด declaration เพื่อลด build time
+    "incremental": true,                              // เปิด incremental compilation เพื่อ build เร็วขึ้น
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"          // กำหนดตำแหน่ง tsbuildinfo
+  },
+  "include": ["src/**/*"],                            // กำหนด files ที่จะ compile
+  "exclude": ["node_modules", "dist"]                 // exclude directories
+}

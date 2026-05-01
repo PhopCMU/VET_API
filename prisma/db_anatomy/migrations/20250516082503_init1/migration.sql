@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Student" ADD COLUMN     "paperPDPA" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "payments" BOOLEAN NOT NULL DEFAULT false;

@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN     "status" BOOLEAN NOT NULL DEFAULT true;
+
+-- AlterTable
+ALTER TABLE "Role" ALTER COLUMN "r_oth_id" SET DATA TYPE TEXT[],
+ALTER COLUMN "r_poi_id" SET DATA TYPE TEXT;

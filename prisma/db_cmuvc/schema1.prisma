@@ -1,0 +1,367 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/cmuvc" // สร้าง client ในโฟลเดอร์แยก
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_CMUVC")
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+/**
+ * MODEL THEME
+ */
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+model ThemeTitle {
+  mainId              String                @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title               String // หัวข้อหลัก
+  startEvent          DateTime?
+  endEvent            DateTime?
+  status              Boolean               @default(true)
+  part                String                @default("/")
+  position            Int? // date 02/04/2025
+  createAt            DateTime              @default(now())
+  updateAt            DateTime              @default(now())
+  Packages            Packages[]
+  Participant         Participant[]
+  SponsersParticipant SponsersParticipant[]
+}
+
+model Packages {
+  packageId           String                @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  themeTitleId        String                @db.Uuid
+  themeTitle          ThemeTitle            @relation(fields: [themeTitleId], references: [mainId])
+  category_th         String // ประเภทผู้เข้าร่วม เช่น "บุคคลทั่วไป", "ศิษย์เก่า"
+  category_en         String // ประเภทผู้เข้าร่วม เช่น "บุคคลทั่วไป", "ศิษย์เก่า"
+  earlyBird           Int? // ราคาสำหรับ Early bird
+  regularRate         Int? // ราคาปกติ
+  oneDayParticipant   Int? // ราคาสำหรับ 1 วัน
+  endEarlyBird        DateTime?
+  endRegularRate      DateTime?
+  people              Int                   @default(0) // จำนวนที่รองรับ
+  position            Int? // date 02/04/2025
+  createAt            DateTime              @default(now())
+  updateAt            DateTime              @default(now())
+  Participant         Participant[]
+  Abstract            Abstract[]
+  SponsersParticipant SponsersParticipant[]
+}
+
+model Foods {
+  foodId              String                @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  foodType            String
+  createAt            DateTime              @default(now())
+  updateAt            DateTime              @default(now())
+  Participant         Participant[]
+  Abstract            Abstract[]
+  SponsersParticipant SponsersParticipant[]
+  SponsersBoot        SponsersBoot[]
+}
+
+model Categorys {
+  categoryId          String                @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryType        String // Participant | Sponser | Abstract
+  status              Boolean               @default(true)
+  createAt            DateTime              @default(now())
+  updateAt            DateTime              @default(now())
+  Participant         Participant[]
+  Abstract            Abstract[]
+  SponsersParticipant SponsersParticipant[]
+  SponsersBoot        SponsersBoot[]
+}
+
+model AbstractType {
+  abstractTypeId String     @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adstractType   String //Poster | Oral
+  createAt       DateTime   @default(now())
+  updateAt       DateTime   @default(now())
+  Abstract       Abstract[]
+}
+
+model SelectDay {
+  selectdayId String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  day         String
+  month       String
+  year        String
+  dayDate     DateTime?
+  createAt    DateTime      @default(now())
+  updateAt    DateTime      @default(now())
+  Participant Participant[]
+}
+
+model Companys {
+  companyId           String                @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String
+  address             String
+  createAt            DateTime              @default(now())
+  updateAt            DateTime              @updatedAt
+  SponsersParticipant SponsersParticipant[]
+  SponsersBoot        SponsersBoot[]
+}
+
+model Datetable {
+  datetableId String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date_text   String
+  date        DateTime?
+  createAt    DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+/**
+ * MODEL PARTICIPANT
+ */
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+
+model Participant {
+  participantId String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  themeTitleId  String      @db.Uuid
+  themeTitle    ThemeTitle  @relation(fields: [themeTitleId], references: [mainId])
+  categoryId    String      @db.Uuid
+  categorys     Categorys   @relation(fields: [categoryId], references: [categoryId])
+  packagesId    String      @db.Uuid
+  packages      Packages    @relation(fields: [packagesId], references: [packageId])
+  price         Int // ราคาที่จะดึงจาก Package earlyBird | regularRate | oneDayParticipant
+  ce            String?     @default("0") // CE
+  prefix        String // คำนำหน้า
+  fname         String // ชื่อ
+  lname         String // นามสกุล
+  phone         String // เบอร์โทร
+  email         String
+  organization  String
+  country       String
+  address       String
+  subDistrict   String
+  district      String
+  province      String
+  zipCode       String
+  foodId        String      @db.Uuid
+  foods         Foods       @relation(fields: [foodId], references: [foodId])
+  acc           Boolean     @default(true) // ยอมรับข้อตกลง
+  Imagepayment  String // สลิปเงินโอน
+  packageOneDay String      @default("0")
+  selectdayId   String?     @db.Uuid
+  selectday     SelectDay?  @relation(fields: [selectdayId], references: [selectdayId])
+  payments      Boolean     @default(false) // false = pending รอดำเนิดการ | true = Complete สมบูรณื สำเร็จ
+  createAt      DateTime    @default(now())
+  updateAt      DateTime    @default(now())
+  Timetable     Timetable[]
+
+  // เพิ่มข้อจำกัดความไม่ซ้ำสำหรับ email และ themeTitleId
+  @@unique([email, themeTitleId])
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+/**
+ * MODEL ABSTRACT
+ */
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+
+model Abstract {
+  abstractId     String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  abstractTypeId String       @db.Uuid
+  abstractType   AbstractType @relation(fields: [abstractTypeId], references: [abstractTypeId])
+  categoryId     String       @db.Uuid
+  categorys      Categorys    @relation(fields: [categoryId], references: [categoryId])
+  packagesId     String       @db.Uuid
+  packages       Packages     @relation(fields: [packagesId], references: [packageId])
+  price          Int // ราคาที่จะดึงจาก Package earlyBird อย่างเดียว
+  ce             String?      @default("0") // CE
+  prefix         String // คำนำหน้า
+  fname          String // ชื่อ
+  lname          String // นามสกุล
+  phone          String // เบอร์โทร
+  email          String       @unique // อีเมล 
+  organization   String
+  country        String
+  address        String
+  subDistrict    String
+  district       String
+  province       String
+  zipCode        String
+  foodId         String       @db.Uuid
+  foods          Foods        @relation(fields: [foodId], references: [foodId])
+  acc            Boolean      @default(true) // ยอมรับข้อตกลง
+  Imagepayment   String? // สลิปเงินโอน
+  statusAbstract String       @default("Pending") // Pending | Accepted | Rejected
+  titleAbstarct  String // ชื่อผลงาน
+  fileAbstarct   String // แนบไฟล์ นำเสนอผลงาน // ขนาดไฟลไม่เกิน 10 mb แนบเป็น พี่ doc | docx
+  payments       Boolean      @default(false) // false = Pending รอดำเนิดการ | true = Complete สมบูรณื สำเร็จ
+  createAt       DateTime     @default(now())
+  updateAt       DateTime     @default(now())
+  Timetable      Timetable[]
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+/**
+ * MODEL LECTURER + VET
+ */
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+
+model Lecturer_vet {
+  accountId  String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  prefix     String
+  fname      String
+  lname      String
+  number_ce  String?     @default("00-00000/0000")
+  createAt   DateTime    @default(now())
+  updateAt   DateTime?   @updatedAt
+  timetables Timetable[]
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+/**
+ * MODEL PERSONNEL
+ */
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+
+model Personnel {
+  personnelId String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  prefix      String
+  fname       String
+  lname       String
+  createAt    DateTime  @default(now())
+  updateAt    DateTime? @updatedAt
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+/**
+ * MODEL SPONSER
+ */
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+
+model SponsersParticipant {
+  sponserParticipantId String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId           String      @db.Uuid
+  categorys            Categorys   @relation(fields: [categoryId], references: [categoryId])
+  companyId            String      @db.Uuid
+  companys             Companys    @relation(fields: [companyId], references: [companyId])
+  packagesId           String      @db.Uuid
+  packages             Packages    @relation(fields: [packagesId], references: [packageId])
+  themeTitleId         String      @db.Uuid
+  themeTitle           ThemeTitle  @relation(fields: [themeTitleId], references: [mainId])
+  foodId               String      @db.Uuid
+  foods                Foods       @relation(fields: [foodId], references: [foodId])
+  ce                   String?     @default("0") // CE
+  prefix               String // คำนำหน้า
+  fname                String // ชื่อ
+  lname                String // นามสกุล
+  phone                String // เบอร์โทร
+  email                String
+  organization         String
+  payments             Boolean     @default(true) // false = pending รอดำเนิดการ | true = Complete 
+  createAt             DateTime    @default(now())
+  updateAt             DateTime?   @updatedAt
+  Timetable            Timetable[]
+}
+
+model SponsersBoot {
+  sponserBootId String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId    String      @db.Uuid
+  categorys     Categorys   @relation(fields: [categoryId], references: [categoryId])
+  companyId     String      @db.Uuid
+  companys      Companys    @relation(fields: [companyId], references: [companyId])
+  foodId        String      @db.Uuid
+  foods         Foods       @relation(fields: [foodId], references: [foodId])
+  ce            String?     @default("0") // CE
+  prefix        String // คำนำหน้า
+  fname         String // ชื่อ
+  lname         String // นามสกุล
+  phone         String // เบอร์โทร
+  email         String
+  payments      Boolean     @default(true) // false = pending รอดำเนิดการ | true = Complete 
+  createAt      DateTime    @default(now())
+  updateAt      DateTime?   @updatedAt
+  Timetable     Timetable[]
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+/**
+ * MODEL STUDENTS
+ */
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+
+model Students {
+  studentId   String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentCode String      @unique // รหัสประจำตัวนักศึกษา
+  prefix      String // คำนำหน้า
+  fname       String // ชื่อ
+  lname       String // นามสกุล
+  level       String // ระดับชั้น
+  createAt    DateTime    @default(now())
+  updateAt    DateTime?   @updatedAt
+  Timetable   Timetable[]
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+/**
+ * MODEL INTERNSHIP
+ */
+/**
+ * ---------------------------------------------------------------------------------------------------------
+ */
+
+model Internship {
+  internshipId String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ce           String? // CE
+  prefix       String // คำนำหน้า
+  fname        String // ชื่อ
+  lname        String // นามสกุล
+  category     String? // intern | RA
+  createAt     DateTime  @default(now())
+  updateAt     DateTime? @updatedAt
+}
+
+model Timetable {
+  timetableId           String               @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  participantId         String?              @db.Uuid
+  participant           Participant?         @relation(fields: [participantId], references: [participantId])
+  abstractId            String?              @db.Uuid
+  abstract              Abstract?            @relation(fields: [abstractId], references: [abstractId])
+  sponsersParticipantId String?              @db.Uuid
+  sponsersParticipant   SponsersParticipant? @relation(fields: [sponsersParticipantId], references: [sponserParticipantId])
+  sponsersBootId        String?              @db.Uuid
+  sponsersBoot          SponsersBoot?        @relation(fields: [sponsersBootId], references: [sponserBootId])
+  vetId                 String?              @db.Uuid
+  vet                   Lecturer_vet?        @relation(fields: [vetId], references: [accountId])
+  studentsId            String?              @db.Uuid
+  students              Students?            @relation(fields: [studentsId], references: [studentId])
+  day8                  DateTime?
+  day9                  DateTime?
+  day10                 DateTime?
+  day11                 DateTime?
+  day12                 DateTime?
+  createAt              DateTime             @default(now())
+  updateAt              DateTime             @updatedAt
+}
