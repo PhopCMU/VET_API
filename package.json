@@ -14,7 +14,7 @@
     "@elysiajs/swagger": "^1.2.2",
     "@prisma/client": "^6.13.0",
     "@types/qs": "^6.9.18",
-    "axios": "^1.8.3",
+    "axios": "^1.16.0",
     "crypto-js": "^4.2.0",
     "elysia": "latest",
     "elysia-ip": "^1.0.10",

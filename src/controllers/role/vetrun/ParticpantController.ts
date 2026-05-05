@@ -344,7 +344,7 @@ export const RoleParticoantControllerVetRunRemove = async ({
   request,
   set,
   jwt,
-}: Context & { query: string; request: any; set: any; jwt: any }) => {
+}: Context & { query: any; request: any; set: any; jwt: any }) => {
   const action = "PARTICIPANT_CONTROLLER_VETRUN_REMOVE";
 
   // --- เพิ่ม Rate Limiting ที่นี่ ---
@@ -476,7 +476,7 @@ export const RoleParticoantControllerVetRunEdit_Animal = async ({
   request,
   set,
   jwt,
-}: Context & { query: string; request: any; set: any; jwt: any }) => {
+}: Context & { query: any; request: any; set: any; jwt: any }) => {
   const action = "EDIT_PARTICIPANT_ANIMAL";
 
   // --- เพิ่ม Rate Limiting ที่นี่ ---
@@ -608,7 +608,7 @@ export const RoleParticoantControllerVetRunEdit_Prticipant = async ({
   request,
   set,
   jwt,
-}: Context & { query: string; request: any; set: any; jwt: any }) => {
+}: Context & { query: any; request: any; set: any; jwt: any }) => {
   const action = "EDIT_DATA_PARTICIPANT";
 
   // --- เพิ่ม Rate Limiting ที่นี่ ---
@@ -784,7 +784,7 @@ export const RoleOrderShirtsControllerVetrun = async ({
   set,
   request,
   jwt,
-}: Context & { query: string; jwt: any; set: any; request: any }) => {
+}: Context & { query: any; jwt: any; set: any; request: any }) => {
   const action = "FETCH_ORDER_SHIRTS";
   const clientIp = getClientIp(request) || "unknown";
 
@@ -900,7 +900,7 @@ export const RoleOrderShirtsControllerVetrun_Update = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; set: any; request: any }) => {
+}: Context & { query: any; jwt: any; set: any; request: any }) => {
   const action = "UPDATE_ORDER_SHIRTS";
   const clientIp = getClientIp(request) || "unknown";
 
@@ -1010,7 +1010,7 @@ export const RoleOrderTrackingControllerVetrun_Update = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; set: any; request: any }) => {
+}: Context & { query: any; jwt: any; set: any; request: any }) => {
   const action = "UPDATE_ORDER_TRACKING";
   const clientIp = getClientIp(request) || "unknown";
 
@@ -1339,7 +1339,7 @@ export const RoleOrderShirtsControllerVetrun_Delete = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; set: any; request: any }) => {
+}: Context & { query: any; jwt: any; set: any; request: any }) => {
   const action = "DELETE_ORDER_SHIRTS";
   const clientIp = getClientIp(request) || "unknown";
   // --- เพิ่ม Rate Limiting ที่นี่ ---

@@ -14,7 +14,7 @@ export const GetProjectToggle = async ({
   jwt,
   set,
 }: Context & {
-  query: string;
+  query: any;
   request: any;
   jwt: any;
   set: any;
@@ -60,7 +60,7 @@ export const GetProjectToggle = async ({
     });
 
     Logger.info(
-      `${action} | ${name_admin} | ${decryptedData.title} | ${result?.name} | SUCCESS`
+      `${action} | ${name_admin} | ${decryptedData.title} | ${result?.name} | SUCCESS`,
     );
     set.status = 200;
     return {
@@ -87,7 +87,7 @@ export const UpdateProjectToggle = async ({
   jwt,
   set,
 }: Context & {
-  query: string;
+  query: any;
   request: any;
   jwt: any;
   set: any;
@@ -147,7 +147,7 @@ export const UpdateProjectToggle = async ({
     // });
 
     Logger.info(
-      `${action} | ${name_admin} | ${decryptedData.tileData} |  ${decryptedData?.onToggle} | SUCCESS`
+      `${action} | ${name_admin} | ${decryptedData.tileData} |  ${decryptedData?.onToggle} | SUCCESS`,
     );
     set.status = 200;
     return {

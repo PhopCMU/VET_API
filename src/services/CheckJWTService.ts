@@ -11,7 +11,7 @@ interface ResponsePayload {
 export const CheckJWTService = async (
   context: Context,
   set: any,
-  jwt: any
+  jwt: any,
 ): Promise<ResponsePayload> => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
@@ -41,7 +41,7 @@ export const CheckJWTService = async (
     if (!authHeader.startsWith("Bearer ")) {
       set.status = 401;
       console.error(
-        `[${Title}] [${requestTime}] Invalid token format: ${authHeader}`
+        `[${Title}] [${requestTime}] Invalid token format: ${authHeader}`,
       );
       return {
         success: false,
@@ -94,7 +94,7 @@ export const CheckJWTService = async (
   } catch (error: any) {
     console.error(
       `[${Title}] [${requestTime}] Error in CheckJWTService:`,
-      error.message
+      error.message,
     );
     set.status = 500;
     return { success: false, message: "Authentication failed" };
@@ -106,8 +106,8 @@ export const CheckJWTService = async (
 
 export const CheckJWTAuthention = async (
   authToken: string,
-  jwt: any,
-  set: any
+  jwt?: any,
+  set?: any,
 ): Promise<ResponsePayload> => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
@@ -137,7 +137,7 @@ export const CheckJWTAuthention = async (
     if (!authHeader.startsWith("Bearer ")) {
       set.status = 401;
       console.error(
-        `[${Title}] [${requestTime}] Invalid token format: ${authHeader}`
+        `[${Title}] [${requestTime}] Invalid token format: ${authHeader}`,
       );
       return {
         success: false,
@@ -173,7 +173,7 @@ export const CheckJWTAuthention = async (
   } catch (error: any) {
     console.error(
       `[${Title}] [${requestTime}] Error in CheckJWTService:`,
-      error.message
+      error.message,
     );
     set.status = 500;
     return { success: false, message: "Authentication failed" };
@@ -209,7 +209,7 @@ export const verifyJWTForWebSocket = async (authToken: string, jwt: any) => {
 
     if (!authToken.startsWith("Bearer ")) {
       console.error(
-        `[${Title}] [${requestTime}] Invalid token format: ${authToken}`
+        `[${Title}] [${requestTime}] Invalid token format: ${authToken}`,
       );
       return { success: false, message: "Unauthorized: Invalid token format" };
     }
@@ -234,7 +234,7 @@ export const verifyJWTForWebSocket = async (authToken: string, jwt: any) => {
   } catch (error: any) {
     console.error(
       `[${Title}] [${requestTime}] Error in CheckJWTService:`,
-      error.message
+      error.message,
     );
     return { success: false, message: "Authentication failed" };
   } finally {

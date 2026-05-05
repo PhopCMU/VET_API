@@ -104,7 +104,7 @@ export const RoleSponsorParticipantCmuvc_List = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; request: any; set: any }) => {
+}: Context & { query: any; jwt: any; request: any; set: any }) => {
   const action = "FETCH_SPONSOR_PARTICIPANTS";
   const clientIp = getClientIp(request) || "unknown";
 
@@ -394,7 +394,7 @@ export const RoleSponsorEditParticipantCmuvc_Update = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; request: any; set: any }) => {
+}: Context & { query: any; jwt: any; request: any; set: any }) => {
   const action = "UPDATE_SPONSOR_PARTICIPANT";
 
   const authention = await authWithRateLimit(request, set, jwt, action);
@@ -497,7 +497,7 @@ export const RoleSponsorDeleteSponsorParticipantCmuvc = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; request: any; set: any }) => {
+}: Context & { query: any; jwt: any; request: any; set: any }) => {
   const action = "DELETE_SPONSOR_PARTICIPANT";
   const clientIp = getClientIp(request) || "unknown";
 
@@ -590,9 +590,9 @@ export const RoleSponsorBootsCmuvc_List = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; request: any; set: any }) => {
+}: Context & { query: any; jwt: any; request: any; set: any }) => {
   const action = "FETCH_SPONSOR_BOOT";
-  
+
   const clientIp = getClientIp(request) || "unknown";
   // --- เพิ่ม Rate Limiting ที่นี่ ---
   const rateLimitResult = await rateLimitByIp(request);
@@ -852,7 +852,7 @@ export const RoleSponsorEditBootCmuvc_Update = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; request: any; set: any }) => {
+}: Context & { query: any; jwt: any; request: any; set: any }) => {
   const action = "UPDATE_SPONSOR_BOOT";
   const authResult = await authWithRateLimit(request, set, jwt, action);
   if (!authResult.success) {
@@ -958,7 +958,7 @@ export const RoleSponsorDelete_Remove = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; request: any; set: any }) => {
+}: Context & { query: any; jwt: any; request: any; set: any }) => {
   const action = "DELETE_SPONSOR_BOOT";
 
   const authention = await authWithRateLimit(request, set, jwt, action);

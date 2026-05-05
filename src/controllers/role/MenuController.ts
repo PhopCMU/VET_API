@@ -64,7 +64,6 @@ export const AddMenuController = async ({
     const authention = await CheckJWTAuthention(authToken, jwt, set);
 
     if (!authention.success) {
-      const remoteAddr = clientIp;
       const userAgent = request.headers.get("user-agent") || "unknown";
       const userId =
         authention.data?.firstname_EN + " " + authention.data?.lastname_EN ||
@@ -399,7 +398,7 @@ export const EditMenuController = async ({
   request,
   set,
   jwt,
-}: Context & { query: string; request: any; set: any; jwt: any }) => {
+}: Context & { query: any; request: any; set: any; jwt: any }) => {
   const action = "MENU_EDIT";
 
   // --- เพิ่ม Rate Limiting ที่นี่ ---
@@ -513,7 +512,7 @@ export const EditSubMenuController = async ({
   request,
   set,
   jwt,
-}: Context & { query: string; request: any; set: any; jwt: any }) => {
+}: Context & { query: any; request: any; set: any; jwt: any }) => {
   const action = "SUBMENU_EDIT";
 
   // --- เพิ่ม Rate Limiting ที่นี่ ---

@@ -23,7 +23,7 @@ export const fatchUserAllController = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: string }) => {
+}: Context & { jwt: any; query: any }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,
@@ -57,7 +57,7 @@ export const fatchUserAllController = async ({
 
     if (!query.encryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Missing encrypted data in query`
+        `[${Title}] [${requestTime}] Missing encrypted data in query`,
       );
       set.status = 400;
       return {
@@ -72,7 +72,7 @@ export const fatchUserAllController = async ({
     if (!decryptedData) {
       console.error(
         `[${Title}] [${requestTime}] Failed to decrypt data`,
-        decryptedData
+        decryptedData,
       );
       set.status = 400;
       return {
@@ -103,8 +103,8 @@ export const fatchUserAllController = async ({
     if (error.response) {
       console.error(
         `[${Title}] [${requestTime}] Error details: ${JSON.stringify(
-          error.response
-        )}`
+          error.response,
+        )}`,
       );
     }
     set.status = 500;
@@ -127,7 +127,7 @@ export const fatchUserAllBoardController = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: string }) => {
+}: Context & { jwt: any; query: any }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,
@@ -161,7 +161,7 @@ export const fatchUserAllBoardController = async ({
 
     if (!query.encryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Missing encrypted data in query`
+        `[${Title}] [${requestTime}] Missing encrypted data in query`,
       );
       set.status = 400;
       return {
@@ -176,7 +176,7 @@ export const fatchUserAllBoardController = async ({
     if (!decryptedData) {
       console.error(
         `[${Title}] [${requestTime}] Failed to decrypt data`,
-        decryptedData
+        decryptedData,
       );
       set.status = 400;
       return {
@@ -208,8 +208,8 @@ export const fatchUserAllBoardController = async ({
     if (error.response) {
       console.error(
         `[${Title}] [${requestTime}] Error details: ${JSON.stringify(
-          error.response
-        )}`
+          error.response,
+        )}`,
       );
     }
     set.status = 500;
@@ -231,7 +231,7 @@ export const fatchUserAllBoardSanboxController = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: string }) => {
+}: Context & { jwt: any; query: any }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,
@@ -265,7 +265,7 @@ export const fatchUserAllBoardSanboxController = async ({
 
     if (!query.encryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Missing encrypted data in query`
+        `[${Title}] [${requestTime}] Missing encrypted data in query`,
       );
       set.status = 400;
       return {
@@ -280,7 +280,7 @@ export const fatchUserAllBoardSanboxController = async ({
     if (!decryptedData) {
       console.error(
         `[${Title}] [${requestTime}] Failed to decrypt data`,
-        decryptedData
+        decryptedData,
       );
       set.status = 400;
       return {
@@ -314,8 +314,8 @@ export const fatchUserAllBoardSanboxController = async ({
     if (error.response) {
       console.error(
         `[${Title}] [${requestTime}] Error details: ${JSON.stringify(
-          error.response
-        )}`
+          error.response,
+        )}`,
       );
     }
     set.status = 500;
@@ -337,7 +337,7 @@ export const addScoreController = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: string; body: EncryptedPropsModel }) => {
+}: Context & { jwt: any; query: any; body: EncryptedPropsModel }) => {
   const Title = "360";
 
   console.info(`-`.repeat(80));
@@ -360,7 +360,7 @@ export const addScoreController = async ({
 
     if (!body.encryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Missing encrypted data in query`
+        `[${Title}] [${requestTime}] Missing encrypted data in query`,
       );
       set.status = 400;
       return {
@@ -375,7 +375,7 @@ export const addScoreController = async ({
     if (!decryptedData) {
       console.error(
         `[${Title}] [${requestTime}] Failed to decrypt data`,
-        decryptedData
+        decryptedData,
       );
       set.status = 400;
       return {
@@ -411,13 +411,13 @@ export const addScoreController = async ({
     }
   } catch (error: any) {
     console.error(
-      `[${Title}] [${requestTime}] Add score failed: ${error.message}`
+      `[${Title}] [${requestTime}] Add score failed: ${error.message}`,
     );
     if (error.response) {
       console.error(
         `[${Title}] [${requestTime}] Error details: ${JSON.stringify(
-          error.response
-        )}`
+          error.response,
+        )}`,
       );
     }
     set.status = 500;
@@ -439,7 +439,7 @@ export const addScoreController_Board = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: string; body: EncryptedPropsModel }) => {
+}: Context & { jwt: any; query: any; body: EncryptedPropsModel }) => {
   const Title = "360][Board";
 
   console.info(`-`.repeat(80));
@@ -462,7 +462,7 @@ export const addScoreController_Board = async ({
 
     if (!body.encryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Missing encrypted data in query`
+        `[${Title}] [${requestTime}] Missing encrypted data in query`,
       );
       set.status = 400;
       return {
@@ -477,7 +477,7 @@ export const addScoreController_Board = async ({
     if (!decryptedData) {
       console.error(
         `[${Title}] [${requestTime}] Failed to decrypt data`,
-        decryptedData
+        decryptedData,
       );
       set.status = 400;
       return {
@@ -516,13 +516,13 @@ export const addScoreController_Board = async ({
     }
   } catch (error: any) {
     console.error(
-      `[${Title}] [${requestTime}] Add score failed: ${error.message}`
+      `[${Title}] [${requestTime}] Add score failed: ${error.message}`,
     );
     if (error.response) {
       console.error(
         `[${Title}] [${requestTime}] Error details: ${JSON.stringify(
-          error.response
-        )}`
+          error.response,
+        )}`,
       );
     }
     set.status = 500;

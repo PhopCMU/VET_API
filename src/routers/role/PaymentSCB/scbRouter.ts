@@ -45,6 +45,9 @@ export const scbRouter = new Elysia({
   })
 
   .get("/data", ScbControllerList, {
+    query: t.Object({
+      encryptedData: t.String(),
+    }),
     detail: { tags: ["SCB"] },
   })
   .post("/void", ScbControllerVoid, {

@@ -130,7 +130,7 @@ export const fatchUserAllBoardController_Role = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: string }) => {
+}: Context & { jwt: any; query: any }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,
@@ -234,7 +234,7 @@ export const fatchUserAllBoardSanboxController_Role = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: string }) => {
+}: Context & { jwt: any; query: any }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,

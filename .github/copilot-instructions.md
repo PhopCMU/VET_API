@@ -5,4 +5,4 @@ logging, naming, testing), then README.md, then only the files you need.
 2. Minimal patch — do not refactor surrounding code.
 3. `bun run typecheck` must pass (exit 0) before declaring done.
 4. No new dependencies without approval.
-5. New secrets → `.env.example` with placeholder, never hardcode.
+5. New secrets → `.env` with placeholder, never hardcode.

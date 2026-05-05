@@ -491,7 +491,7 @@ export const Role_Update_Abstract_Status = async ({
   request,
 }: Context & {
   jwt: any;
-  query: string;
+  query: any;
 }) => {
   console.info(`-`.repeat(80));
   console.info(`Abstract Status`);
@@ -589,7 +589,7 @@ export const Role_Delete_Abstract = async ({
   jwt: any;
   set: any;
   request: any;
-  query: string;
+  query: any;
 }) => {
   const action = "DELETE_ABSTRACT";
   const clientIp = getClientIp(request) || "unknown";

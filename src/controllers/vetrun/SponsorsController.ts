@@ -267,7 +267,7 @@ export const VetrunSponsorRemoveLogo = async ({
   request,
   set,
   jwt,
-}: Context & { query: string; jwt: any; request: any; set: any }) => {
+}: Context & { query: any; jwt: any; request: any; set: any }) => {
   const rateLimitResult = await rateLimitByIp(request);
   if (!rateLimitResult.success) {
     set.status = 429;

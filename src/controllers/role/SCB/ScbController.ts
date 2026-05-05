@@ -64,13 +64,13 @@ export const ScbControllerAccessToken = async ({
 export const ScbControllerQrCode = async ({
   body,
   request,
-  jwt,
   set,
+  jwt,
 }: Context & {
   body: { encryptedData: string };
   request: any;
   set: any;
-  jwt: any;
+  jwt?: any;
 }) => {
   const action = "CREATE_QR_CODE";
   const clientIp = getClientIp(request) || "unknown";
@@ -270,7 +270,12 @@ export const ScbControllerInquiry = async ({
   request,
   set,
   jwt,
-}: Context & { query: string; request: any; set: any; jwt: any }) => {
+}: Context & {
+  query: { encryptedData: string };
+  request: any;
+  set: any;
+  jwt?: any;
+}) => {
   const action = "FETCH_INQUIRY";
   const clientIp = getClientIp(request) || "unknown";
 
@@ -450,10 +455,16 @@ export const ScbControllerInquiry = async ({
 };
 
 export const ScbControllerList = async ({
-  jwt,
+  query,
   set,
   request,
-}: Context & { request: any; set: any; jwt: any }) => {
+  jwt,
+}: Context & {
+  query: { encryptedData: string };
+  request: any;
+  set: any;
+  jwt?: any;
+}) => {
   const action = "SCB_FETCH_LIST";
   const clientIp = getClientIp(request) || "unknown";
 
@@ -493,8 +504,17 @@ export const ScbControllerList = async ({
     };
   }
 
+  const decodeEndcypto = decodeURIComponent(query.encryptedData);
+  const decryptedData = decryptMiddleware(decodeEndcypto) as any;
+
   try {
     const response = await prisma.scbPayments.findMany({
+      where: {
+        createdAt: {
+          gte: new Date(decryptedData.dateFrom),
+          lte: new Date(decryptedData.dateTo),
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -533,12 +553,12 @@ export const ScbControllerList = async ({
 
 export const ScbControllerVoid = async ({
   body,
-  jwt,
   set,
   request,
+  jwt,
 }: Context & {
   body: { encryptedData: string };
-  jwt: any;
+  jwt?: any;
   request: any;
   set: any;
 }) => {
@@ -812,7 +832,7 @@ export const ScbControllerWaitPayment = async ({
   set,
   request,
   jwt,
-}: Context & { request: any; set: any; jwt: any }) => {
+}: Context & { request: any; set: any; jwt?: any }) => {
   const action = "WAIT_PAYMENT";
 
   const clientIp = getClientIp(request) || "unknown";

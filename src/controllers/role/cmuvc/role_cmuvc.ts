@@ -38,7 +38,7 @@ export const Role_Participant_List = async ({
   jwt,
   request,
   set,
-}: Context & { query: string; jwt: any; request: any; set: any }) => {
+}: Context & { query: any; jwt: any; request: any; set: any }) => {
   try {
     const authToken = request.headers.get("Authorization") ?? "";
     const authention = await CheckJWTAuthention(authToken, jwt, set);
@@ -54,7 +54,7 @@ export const Role_Participant_List = async ({
 
     if (!query.encryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Missing encrypted data in query`
+        `[${Title}] [${requestTime}] Missing encrypted data in query`,
       );
       set.status = 400;
       return {
@@ -68,7 +68,7 @@ export const Role_Participant_List = async ({
 
     if (!decryptedDataYear) {
       console.error(
-        `[${Title}] [${requestTime}] Failed to decrypt data: ${decryptedDataYear}`
+        `[${Title}] [${requestTime}] Failed to decrypt data: ${decryptedDataYear}`,
       );
       set.status = 400;
       return {
@@ -146,7 +146,7 @@ export const Role_Participant_List = async ({
     if (!search_participant || !search_abstract) {
       set.status = 404;
       console.error(
-        `[${Title}] [${requestTime}]  Fetch Participant Not Data found`
+        `[${Title}] [${requestTime}]  Fetch Participant Not Data found`,
       );
       return {
         success: false,
@@ -155,7 +155,7 @@ export const Role_Participant_List = async ({
     }
 
     console.info(
-      `[${Title}] [${requestTime}]  Fetch ParticipantList successfully`
+      `[${Title}] [${requestTime}]  Fetch ParticipantList successfully`,
     );
     set.status = 200;
     return {
@@ -168,7 +168,7 @@ export const Role_Participant_List = async ({
     };
   } catch (e: any) {
     console.error(
-      `[${Title}] [${requestTime}] Error in ParticipantList_All: ${e.message}\nStack: ${e.stack}`
+      `[${Title}] [${requestTime}] Error in ParticipantList_All: ${e.message}\nStack: ${e.stack}`,
     );
     set.status = 500;
     return {
@@ -209,7 +209,7 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
 
     if (!body.encryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Missing encrypted data in query`
+        `[${Title}] [${requestTime}] Missing encrypted data in query`,
       );
       set.status = 400;
       return {
@@ -223,7 +223,7 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
 
     if (!decryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Failed to decrypt data: ${decryptedData}`
+        `[${Title}] [${requestTime}] Failed to decrypt data: ${decryptedData}`,
       );
       set.status = 400;
       return {
@@ -261,7 +261,7 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
       console.error(
         `[${Title}] [${requestTime}]  Update ${
           main_type === "participant" ? "Participant" : "Abstract"
-        } Not Data found`
+        } Not Data found`,
       );
       return {
         success: false,
@@ -274,7 +274,7 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
     if (!Imagepayment) {
       set.status = 400;
       console.error(
-        `[${Title}] [${requestTime}]  Missing Imagepayment in request`
+        `[${Title}] [${requestTime}]  Missing Imagepayment in request`,
       );
       return {
         success: false,
@@ -289,7 +289,7 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
       if (!imageExt || !allowedImageExtensions.includes(imageExt)) {
         set.status = 400;
         console.error(
-          `[${Title}] [${requestTime}]  Invalid Image extension: ${imageExt}`
+          `[${Title}] [${requestTime}]  Invalid Image extension: ${imageExt}`,
         );
         return {
           success: false,
@@ -301,7 +301,7 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
       if (imageSize > MAX_IMAGE_SIZE) {
         set.status = 400;
         console.error(
-          `[${Title}] [${requestTime}]  Image size exceeds the limit: ${imageSize}`
+          `[${Title}] [${requestTime}]  Image size exceeds the limit: ${imageSize}`,
         );
         return {
           success: false,
@@ -322,9 +322,9 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
       deletionPromises.push(
         unlink(oldFilePath).catch((err) => {
           console.error(
-            `[${Title}] [${requestTime}]  Error deleting old file: ${err.message}`
+            `[${Title}] [${requestTime}]  Error deleting old file: ${err.message}`,
           );
-        })
+        }),
       );
     }
 
@@ -366,9 +366,9 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
       writePromises.push(
         fs.writeFile(ImagePath, ImageBuffer).catch((err) => {
           console.error(
-            `[${Title}] [${requestTime}]  Error writing Image file: ${err.message}`
+            `[${Title}] [${requestTime}]  Error writing Image file: ${err.message}`,
           );
-        })
+        }),
       );
     }
 
@@ -378,7 +378,7 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
       console.info(
         `[${Title}] [${requestTime}]  UPDATE ${
           main_type === "participant" ? "PARTICIPANT" : "ABSTRACT"
-        } SUCCESSFUL`
+        } SUCCESSFUL`,
       );
       set.status = 200;
       return {
@@ -390,7 +390,7 @@ export const Role_Participant_And_Abstract_Update_Image = async ({
     }
   } catch (e: any) {
     console.error(
-      `[${Title}] [${requestTime}] Error in Update Image payment: ${e.message}\nStack: ${e.stack}`
+      `[${Title}] [${requestTime}] Error in Update Image payment: ${e.message}\nStack: ${e.stack}`,
     );
     set.status = 500;
     return {
@@ -431,7 +431,7 @@ export const Role_Participant_And_Abstract_Status = async ({
 
     if (!query.paymentData) {
       console.error(
-        `[${Title}] [${requestTime}] Missing encrypted data in query`
+        `[${Title}] [${requestTime}] Missing encrypted data in query`,
       );
       set.status = 400;
       return {
@@ -445,7 +445,7 @@ export const Role_Participant_And_Abstract_Status = async ({
 
     if (!decryptedData) {
       console.error(
-        `[${Title}] [${requestTime}] Failed to decrypt data: ${decryptedData}`
+        `[${Title}] [${requestTime}] Failed to decrypt data: ${decryptedData}`,
       );
       set.status = 400;
       return {
@@ -482,7 +482,7 @@ export const Role_Participant_And_Abstract_Status = async ({
       console.error(
         `[${Title}] [${requestTime}]  Update ${
           main_type === "participant" ? "Participant" : "Abstract"
-        } Not Data found`
+        } Not Data found`,
       );
       return {
         success: false,
@@ -520,7 +520,7 @@ export const Role_Participant_And_Abstract_Status = async ({
       console.info(
         `[${Title}] [${requestTime}]  UPDATE ${
           main_type === "participant" ? "PARTICIPANT" : "ABSTRACT"
-        } SUCCESSFUL`
+        } SUCCESSFUL`,
       );
       set.status = 200;
       return {
@@ -532,7 +532,7 @@ export const Role_Participant_And_Abstract_Status = async ({
     }
   } catch (e: any) {
     console.error(
-      `[${Title}] [${requestTime}] Error in Update Image payment: ${e.message}\nStack: ${e.stack}`
+      `[${Title}] [${requestTime}] Error in Update Image payment: ${e.message}\nStack: ${e.stack}`,
     );
     set.status = 500;
     return {

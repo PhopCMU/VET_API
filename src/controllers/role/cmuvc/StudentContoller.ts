@@ -50,7 +50,7 @@ export const Role_Fetch_Students = async ({
     };
   } catch (error: any) {
     console.error(
-      `[${Title}] Error in ParticipantList_All: ${error.message}\nStack: ${error.stack}`
+      `[${Title}] Error in ParticipantList_All: ${error.message}\nStack: ${error.stack}`,
     );
     set.status = 500;
     return {
@@ -132,7 +132,7 @@ export const Role_Create_Student = async ({
     }
   } catch (error: any) {
     console.error(
-      `[${Title}] Error in ParticipantList_All: ${error.message}\nStack: ${error.stack}`
+      `[${Title}] Error in ParticipantList_All: ${error.message}\nStack: ${error.stack}`,
     );
     set.status = 500;
     return {
@@ -152,7 +152,7 @@ export const Role_Update_Student = async ({
   query,
   set,
   jwt,
-}: Context & { request: any; query: string; set: any; jwt: any }) => {
+}: Context & { request: any; query: any; set: any; jwt: any }) => {
   try {
     const authToken = request.headers.get("Authorization") ?? "";
     const authention = await CheckJWTAuthention(authToken, jwt, set);
@@ -211,7 +211,7 @@ export const Role_Update_Student = async ({
     }
   } catch (error: any) {
     console.error(
-      `[${Title}] Error in StudentList: ${error.message}\nStack: ${error.stack}`
+      `[${Title}] Error in StudentList: ${error.message}\nStack: ${error.stack}`,
     );
     set.status = 500;
     return {
@@ -231,7 +231,7 @@ export const Role_Delete_Student = async ({
   query,
   set,
   jwt,
-}: Context & { request: any; query: string; set: any; jwt: any }) => {
+}: Context & { request: any; query: any; set: any; jwt: any }) => {
   try {
     const authToken = request.headers.get("Authorization") ?? "";
     const authention = await CheckJWTAuthention(authToken, jwt, set);
@@ -288,7 +288,7 @@ export const Role_Delete_Student = async ({
     }
   } catch (error: any) {
     console.error(
-      `[${Title}] Error in Student: ${error.message}\nStack: ${error.stack}`
+      `[${Title}] Error in Student: ${error.message}\nStack: ${error.stack}`,
     );
     set.status = 500;
     return {

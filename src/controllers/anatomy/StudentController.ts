@@ -674,7 +674,7 @@ export const UpdateStudentDataPDPA = async ({
   request,
   set,
   jwt,
-}: Context & { jwt: any; query: string }) => {
+}: Context & { jwt: any; query: any }) => {
   const clientIp = getClientIp(request) || "DASHBOARD";
 
   const requestTime = new Date().toLocaleString("th-TH", {
@@ -756,7 +756,7 @@ export const UpdateStudentDataPayment = async ({
   request,
   set,
   jwt,
-}: Context & { jwt: any; query: string }) => {
+}: Context & { jwt: any; query: any }) => {
   const clientIp = getClientIp(request) || "DASHBOARD";
 
   const requestTime = new Date().toLocaleString("th-TH", {
