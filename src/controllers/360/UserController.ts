@@ -23,7 +23,7 @@ export const fatchUserAllController = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: any }) => {
+}: Context & { jwt?: any; query: any }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,
@@ -127,7 +127,7 @@ export const fatchUserAllBoardController = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: any }) => {
+}: Context & { jwt?: any; query: any }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,
@@ -231,7 +231,7 @@ export const fatchUserAllBoardSanboxController = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: any }) => {
+}: Context & { jwt?: any; query: any }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,
@@ -337,7 +337,7 @@ export const addScoreController = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: any; body: EncryptedPropsModel }) => {
+}: Context & { jwt?: any; query: any; body: EncryptedPropsModel }) => {
   const Title = "360";
 
   console.info(`-`.repeat(80));
@@ -439,7 +439,7 @@ export const addScoreController_Board = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: any; body: EncryptedPropsModel }) => {
+}: Context & { jwt?: any; query: any; body: EncryptedPropsModel }) => {
   const Title = "360][Board";
 
   console.info(`-`.repeat(80));

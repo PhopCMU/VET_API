@@ -14,11 +14,11 @@ export const roleUserRouter = new Elysia({
 
 roleUserRouter.get("/user", fetchUserControllerRole, {
   query: EncryptedRequestModel,
-  detail: { tag: ["Dashboard"] },
+  detail: { tags: ["Dashboard"] },
 });
 
 roleUserRouter.get("/hr", userData, {
-  detail: { tag: ["Dashboard"] },
+  detail: { tags: ["Dashboard"] },
 });
 
 roleUserRouter.post("/hr/create", createUser, {
@@ -31,7 +31,7 @@ roleUserRouter.post("/hr/create", createUser, {
       }),
     ),
   }),
-  detail: { tag: ["Dashboard"] },
+  detail: { tags: ["Dashboard"] },
 });
 
 roleUserRouter.post("/hr/update", updateProfile, {
@@ -45,12 +45,12 @@ roleUserRouter.post("/hr/update", updateProfile, {
       }),
     ),
   }),
-  detail: { tag: ["Dashboard"] },
+  detail: { tags: ["Dashboard"] },
 });
 
 roleUserRouter.delete("/hr/remove", deleteProfile, {
   query: t.Object({
     data: t.String(),
   }),
-  detail: { tag: ["Dashboard"] },
+  detail: { tags: ["Dashboard"] },
 });

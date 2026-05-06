@@ -24,7 +24,7 @@ export const fetchUserControllerRole = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; query: EncryptedPropsModel }) => {
+}: Context & { jwt?: any; query: EncryptedPropsModel }) => {
   const requestTime = new Date().toLocaleString("th-TH", {
     timeZone: "Asia/Bangkok",
     hour12: false,
@@ -83,7 +83,11 @@ export const fetchUserControllerRole = async ({
 
     const search = await prisma.user.findMany({
       where: {
-        level2agency_th: decryptedData ?? "",
+        level2agency_th: decryptedData.agency ?? "",
+        createdAt: {
+          gte: new Date(decryptedData.year, 0, 1, 0, 0, 0, 0),
+          lt: new Date(decryptedData.year + 1, 0, 1, 0, 0, 0, 0),
+        },
       },
       include: {
         evaluations: true,
@@ -339,7 +343,7 @@ export const userData = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; request: any; set: any }) => {
+}: Context & { jwt?: any; request: any; set: any }) => {
   try {
     const authToken = request.headers.get("Authorization") ?? "";
     const authention = await CheckJWTAuthention(authToken, jwt, set);
@@ -385,10 +389,10 @@ export const updateProfile = async ({
   request,
   jwt,
 }: Context & {
-  jwt: any;
+  jwt?: any;
   request: any;
   set: any;
-  body: { encryptedData: string; file: File };
+  body: { encryptedData: string; file?: File };
 }) => {
   const authToken = request.headers.get("Authorization") ?? "";
   const authention = await CheckJWTAuthention(authToken, jwt, set);
@@ -563,7 +567,7 @@ export const deleteProfile = async ({
   set,
   request,
   jwt,
-}: Context & { query: { data: string }; request: any; jwt: any }) => {
+}: Context & { query: { data: string }; request: any; jwt?: any }) => {
   const authToken = request.headers.get("Authorization") ?? "";
   const authention = await CheckJWTAuthention(authToken, jwt, set);
 
@@ -702,7 +706,7 @@ export const createUser = async ({
   set,
   request,
   jwt,
-}: Context & { jwt: any; request: any; set: any; body: any }) => {
+}: Context & { jwt?: any; request: any; set: any; body: any }) => {
   const authToken = request.headers.get("Authorization") ?? "";
   const authention = await CheckJWTAuthention(authToken, jwt, set);
 
